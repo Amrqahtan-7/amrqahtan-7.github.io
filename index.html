@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Arabic:wght@500;600&family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
 <script>
-  try{document.documentElement.dataset.theme=localStorage.getItem('aq_theme') || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}catch(e){document.documentElement.dataset.theme='light';}
+  try{document.documentElement.dataset.theme=localStorage.getItem('aq_theme') || 'dark';}catch(e){document.documentElement.dataset.theme='dark';}
 </script>
 <style>
   :root{
@@ -401,6 +401,17 @@
   .portrait-reveal.is-selected .portrait-official{opacity:0;}
 
   .portrait-reveal.is-selected .portrait-alternate{opacity:1;-webkit-mask-image:none;mask-image:none;}
+  .portrait-reveal.is-selected.is-near .portrait-official{
+    opacity:1;
+    -webkit-mask-image:var(--reveal-mask,linear-gradient(transparent,transparent));
+    mask-image:var(--reveal-mask,linear-gradient(transparent,transparent));
+  }
+  .portrait-reveal.is-selected.is-near .portrait-alternate{
+    -webkit-mask-image:linear-gradient(#000,#000),var(--reveal-hole,linear-gradient(transparent,transparent));
+    -webkit-mask-composite:source-out;
+    mask-image:linear-gradient(#000,#000),var(--reveal-hole,linear-gradient(transparent,transparent));
+    mask-composite:subtract;
+  }
 
   .portrait-card{height:auto; min-height:340px;}
   .portrait-reveal{width:270px;max-width:100%;}
@@ -1677,7 +1688,7 @@
     }
   }
   document.addEventListener('pointermove', e => {
-    if (e.pointerType === 'touch' || portrait.classList.contains('is-selected')) return;
+    if (e.pointerType === 'touch') return;
     const r = portrait.getBoundingClientRect();
     const dx = Math.max(r.left-e.clientX, 0, e.clientX-r.right);
     const dy = Math.max(r.top-e.clientY, 0, e.clientY-r.bottom);
